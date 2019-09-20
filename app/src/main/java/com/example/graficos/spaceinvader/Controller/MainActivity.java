@@ -1,8 +1,10 @@
-package com.example.graficos.spaceinvader;
+package com.example.graficos.spaceinvader.Controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.graficos.spaceinvader.R;
 
 public class MainActivity extends AppCompatActivity {
 
