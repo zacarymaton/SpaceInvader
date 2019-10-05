@@ -2,7 +2,9 @@ package com.example.graficos.spaceinvader.Controller;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
+import android.widget.Toast;
 
 import com.example.graficos.spaceinvader.R;
 import com.threed.jpct.Camera;
@@ -26,7 +28,7 @@ import javax.microedition.khronos.opengles.GL10;
 public class RenderView implements GLSurfaceView.Renderer {
     private World world= null;;
     private FrameBuffer fb;
-    private float thingScale = 2.0f;//end
+    private float thingScale = 1.0f;//end
     private static RenderView master = null;
     private RGBColor back = new RGBColor(50, 50, 100);
     private long time = System.currentTimeMillis();
@@ -44,11 +46,8 @@ public class RenderView implements GLSurfaceView.Renderer {
     private boolean stop = false;
     AssetManager assMan;
     InputStream is;
-  //  private min3d.core.Object3dContainer naveOBJ;
-  //  min3d.parser.IParser myParser= min3d.parser.Parser.createParser(min3d.parser.Parser.Type.OBJ,getResources(),"com.example.graficos.spaceinvader:raw/neghvar_obj",true);
     //constructor
-
-    public   RenderView(/*Context context*/Context context){
+    public   RenderView(Context context){
         //instanciamos los objetos a dibujar
         this.context=context;
     }
@@ -80,7 +79,7 @@ public class RenderView implements GLSurfaceView.Renderer {
             sun = new Light(world);
             sun.setIntensity(250, 250, 250);
 
-            thing = loadModel("draw/f.obj", thingScale);
+            thing = loadModel("raw/neghvar_obj.obj", thingScale);
             thing.build();
 
             world.addObject(thing);
@@ -117,8 +116,7 @@ public class RenderView implements GLSurfaceView.Renderer {
 
 
     private Object3D loadModel(String filename, float scale) {
-     //   assMan = getResource().getAssets();
-        is = context.getResources().openRawResource(R.raw.f);
+        is = context.getResources().openRawResource(R.raw.neghvar_obj);
 
 
         
@@ -136,6 +134,9 @@ public class RenderView implements GLSurfaceView.Renderer {
         }
         return o3d;
     }
-
+    public void toastMsg(String msg) {
+     //   Toast toast = Toast.makeText(this.MainActivity, msg, Toast.LENGTH_LONG);
+      //  toast.show();
+    }
 
 }
