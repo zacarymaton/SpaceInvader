@@ -16,19 +16,25 @@ import com.threed.jpct.Matrix;
 import com.threed.jpct.Object3D;
 import com.threed.jpct.RGBColor;
 import com.threed.jpct.SimpleVector;
+import com.threed.jpct.Texture;
+import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
+import com.threed.jpct.util.BitmapHelper;
 
 import java.io.InputStream;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import static com.example.graficos.spaceinvader.R.raw.f_obj;
+import static com.example.graficos.spaceinvader.R.raw.nave_obj;
 
 
 public class RenderView implements GLSurfaceView.Renderer {
+    private MainActivity main;
     private World world= null;;
     private FrameBuffer fb;
-    private float thingScale = 1.0f;//end
+    private float thingScale = 0.0010f;//end
     private static RenderView master = null;
     private RGBColor back = new RGBColor(50, 50, 100);
     private long time = System.currentTimeMillis();
@@ -37,7 +43,7 @@ public class RenderView implements GLSurfaceView.Renderer {
 
     private float xpos = -1;
     private float ypos = -1;
-    private Context context;
+
     private Object3D thing = null;
     private int fps = 0;
 
@@ -45,21 +51,15 @@ public class RenderView implements GLSurfaceView.Renderer {
     private Camera cam = null;
     private boolean stop = false;
     AssetManager assMan;
-    InputStream is;
+    InputStream is,mtl;
     //constructor
+    private Context context;
     public   RenderView(Context context){
-        //instanciamos los objetos a dibujar
         this.context=context;
     }
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig eglConfig) {
-       /* world=new World();
-        Texture t1=new Texture(64,64, RGBColor.BLUE);
-        TextureManager.getInstance().addTexture("t1",t1);
-        Object3D cube= Primitives.getCube(1);
-        cube.translate(5,0,12);
-        cube.setTexture("t1");
-        world.addObject(cube);*/
+
 
     }
 
@@ -71,25 +71,32 @@ public class RenderView implements GLSurfaceView.Renderer {
         }
         fb = new FrameBuffer(gl, width, height);
 
+
+
+
         if (master == null) {
 
             world = new World();
-            world.setAmbientLight(150, 150, 150);
+            world.setAmbientLight(20, 20, 20);
 
             sun = new Light(world);
-            sun.setIntensity(250, 250, 250);
+            sun.setIntensity(200, 200, 200);
+            // Create a texture out of the icon...:-)
+           // Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(main.getResources().getDrawable(R.drawable.ic_launcher_background)), 64, 64));
+           // TextureManager.getInstance().addTexture("texture", texture);
 
-            thing = loadModel("raw/neghvar_obj.obj", thingScale);
+            thing = loadModel("raw/nave_obj.obj", thingScale);
             thing.build();
 
             world.addObject(thing);
-
             cam = world.getCamera();
             cam.moveCamera(Camera.CAMERA_MOVEOUT, 50);
             cam.lookAt(thing.getTransformedCenter());
+            //cam.setBack(cam.getZAxis());
 
             SimpleVector sv = new SimpleVector();
             sv.set(thing.getTransformedCenter());
+          // sv.x -=70;
             sv.y -= 100;
             sv.z -= 100;
             sun.setPosition(sv);
@@ -105,10 +112,10 @@ public class RenderView implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl10) {
-        /*fb.clear();
+        fb.clear();
         world.renderScene(fb);
-        world.draw(fb);
-        fb.display();*/
+       world.draw(fb);
+       fb.display();
 
     }
 
@@ -116,11 +123,10 @@ public class RenderView implements GLSurfaceView.Renderer {
 
 
     private Object3D loadModel(String filename, float scale) {
-        is = context.getResources().openRawResource(R.raw.neghvar_obj);
+        is = context.getResources().openRawResource(nave_obj);
+        mtl=context.getResources().openRawResource(R.raw.nave_mtl);
 
-
-        
-        Object3D[] model = Loader.loadOBJ(is, null, scale);
+        Object3D[] model = Loader.loadOBJ(is, mtl, scale);
         Object3D o3d = new Object3D(0);
         Object3D temp = null;
         for (int i = 0; i < model.length; i++) {
@@ -135,8 +141,8 @@ public class RenderView implements GLSurfaceView.Renderer {
         return o3d;
     }
     public void toastMsg(String msg) {
-     //   Toast toast = Toast.makeText(this.MainActivity, msg, Toast.LENGTH_LONG);
-      //  toast.show();
+       Toast toast = Toast.makeText(main.getApplicationContext(), msg, Toast.LENGTH_LONG);
+        toast.show();
     }
 
 }
