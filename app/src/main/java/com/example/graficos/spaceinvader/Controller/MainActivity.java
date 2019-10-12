@@ -20,6 +20,10 @@ private OpengGLView opengGLView;
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //instancio el SurfaceView en la Interfaz
         opengGLView=(OpengGLView)findViewById(R.id.openGLView);
+        opengGLView.setBackgroundResource(R.drawable.invacionbackground);
+       opengGLView.setZOrderOnTop(true);
+
+
     }
     @Override
     protected  void onResume(){
@@ -31,4 +35,10 @@ private OpengGLView opengGLView;
         super.onPause();
         opengGLView.onPause();
     }
+    @Override
+    protected void onStop(){
+        super.onStop();
+        opengGLView.onResume();
+    }
+
 }
