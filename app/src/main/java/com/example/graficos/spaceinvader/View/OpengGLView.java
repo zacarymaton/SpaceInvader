@@ -1,14 +1,21 @@
 package com.example.graficos.spaceinvader.View;
 
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
-import com.example.graficos.spaceinvader.Controller.MainActivity;
+
 import com.example.graficos.spaceinvader.Controller.RenderView;
-import com.example.graficos.spaceinvader.R;
+
 
 public class OpengGLView extends GLSurfaceView {
+
+
+
     public RenderView escenario;;
     private OpengGLView view;
     public OpengGLView(Context context) {
@@ -27,9 +34,5 @@ public class OpengGLView extends GLSurfaceView {
         setPreserveEGLContextOnPause(true);
         setRenderer(escenario);
     }
-
-
-
-
 
 }

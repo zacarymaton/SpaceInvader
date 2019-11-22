@@ -1,13 +1,19 @@
 package com.example.graficos.spaceinvader.Controller;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
+import android.os.Bundle;
 import android.widget.Toast;
 
 import com.example.graficos.spaceinvader.R;
@@ -37,7 +43,7 @@ import static com.example.graficos.spaceinvader.R.raw.f_obj;
 import static com.example.graficos.spaceinvader.R.raw.nave_obj;
 
 
-public class RenderView implements GLSurfaceView.Renderer {
+public class RenderView extends Activity implements GLSurfaceView.Renderer, SensorEventListener {
     private MainActivity main;
     private World world= null;;
     private FrameBuffer fb;
@@ -51,7 +57,7 @@ public class RenderView implements GLSurfaceView.Renderer {
     private float xpos = -1;
     private float ypos = -1;
 
-    private Object3D thing = null;
+    public Object3D thing = null;
 
     private int fps = 0;
 
@@ -61,9 +67,29 @@ public class RenderView implements GLSurfaceView.Renderer {
     AssetManager assMan;
     InputStream is,mtl;
     //constructor
+    private SensorManager miMananger;
+    private Sensor miAcelorometro;
     private Context context;
     public   RenderView(Context context){
         this.context=context;
+
+
+    }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        miMananger=(SensorManager)getSystemService(SENSOR_SERVICE);
+        miAcelorometro=   miMananger.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    }
+    @Override
+    protected  void onResume(){
+        super.onResume();
+        miMananger.registerListener(this,miAcelorometro,SensorManager.SENSOR_DELAY_GAME);
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        miMananger.unregisterListener(this);
     }
 
     @Override
@@ -86,6 +112,7 @@ public class RenderView implements GLSurfaceView.Renderer {
         if (master == null) {
 
             world = new World();
+
             world.setAmbientLight(20, 20, 20);
 
             sun = new Light(world);
@@ -125,6 +152,7 @@ public class RenderView implements GLSurfaceView.Renderer {
                 master = RenderView.this;
             }
         }
+        mover_nave(movete);
 
     }
 
@@ -159,6 +187,7 @@ public class RenderView implements GLSurfaceView.Renderer {
         npotTexture.applyEffect ();
 
 */
+     mover_nave(movete);
         fb.clear();
         //fb.blit (npotTexture, 0, 0, 0, 0,bitmap.getWidth (), bitmap.getHeight (),FrameBuffer.OPAQUE_BLITTING);
         world.renderScene(fb);
@@ -192,5 +221,53 @@ public class RenderView implements GLSurfaceView.Renderer {
        Toast toast = Toast.makeText(main.getApplicationContext(), msg, Toast.LENGTH_LONG);
         toast.show();
     }
+    private void copyMatrix(float[] src, com.threed.jpct.Matrix dest) {
+        dest.setRow(0, src[0], src[1], src[2], 0);
+        dest.setRow(1, src[3], src[4], src[5], 0);
+        dest.setRow(2, src[6], src[7], src[8], 0);
+        dest.setRow(3, 0f, 0f, 0f, 1f);
+    }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+       // String s=String.valueOf(event);
+       // toastMsg(s);
+
+        float[] result = new float[9];
+       /* SensorManager.remapCoordinateSystem(
+                rotationMatrix, SensorManager.AXIS_MINUS_Y,
+                SensorManager.AXIS_MINUS_X, result);*/
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+    public float movete=0;
+    public void mover_nave(float valor){
+ float  cant=0.005f;
+        if (valor<0 && valor>-50){
+            //thing.translate(movete+cant,0.0f,0);
+            thing.translate(0.05f,0.0f,0);
+            //thing.rotateZ(0.55f);
+            //thing.translate(0.05f,0.0f,0.55f); los objetos se alejan de z hacia x
+        }
+        if(valor>0 && valor<40)
+        {
+           // thing.translate(movete-cant,0.0f,0);
+            thing.translate(-0.05f,0.0f,0);
+            //thing.rotateZ(-0.55f);
+            //thing.translate(-0.05f,0.0f,-0.55f); los objetos vienen de z hacia x
+        }
+    }
+
+float constante=0.05f;
+    public void mover_derecha() {
+        thing.translate(movete+constante,0.0f,0);
+    }
+
+    public void mover_izquierda() {
+        thing.translate(movete-constante,0.0f,0);
+
+    }
 }
