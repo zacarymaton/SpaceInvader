@@ -31,8 +31,11 @@ private OpengGLView opengGLView;
         opengGLView=(OpengGLView)findViewById(R.id.openGLView);
         opengGLView.setBackgroundResource(R.drawable.invacionbackground);
        opengGLView.setZOrderOnTop(true);
+      //sensor de acelerometro
         miMananger=(SensorManager)getSystemService(SENSOR_SERVICE);
         miAcelorometro=   miMananger.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+     //
+
         txt=(TextView)findViewById(R.id.idText);
 
     }
@@ -56,19 +59,28 @@ private OpengGLView opengGLView;
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        String s=String.valueOf(event.values[0]);
-        toastMsg(s);
-        txt.setText(s);
-        Float dato=Float.parseFloat(s);
+        String x=String.valueOf(event.values[1]);
+        String y=String.valueOf(event.values[1]);
+        String z=String.valueOf(event.values[2]);
 
 
-        //if(dato>0) {
+       // toastMsg(x);
+      //  txt.setText(x);
 
-//                  opengGLView.escenario.mover_derecha();
-       // }else {
-//            opengGLView.escenario.mover_izquierda();
-        //}
-     //  opengGLView.escenario.movete=dato*0.0095f;
+        Float datox=Float.parseFloat(x);
+        Float datoy=Float.parseFloat(y);
+        Float datoz=Float.parseFloat(z);
+
+
+       /* if(datox>0) {
+
+                 opengGLView.escenario.mover_derecha();
+        }else {
+           opengGLView.escenario.mover_izquierda();
+           }
+        */
+
+     opengGLView.escenario.movete=datox*0.0095f;
 
     }
     public void toastMsg(String msg) {

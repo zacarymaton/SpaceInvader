@@ -34,11 +34,16 @@ private Object3D nave;
 
     }
     public void moverDerecha(Object3D object3D){
+
         nave.translate(constante,0,0);
     }
     public void moverArriba(Object3D object3D){
+
         nave.translate(0,constante,0);
     }
+
+
+
     //leemos el modelo del contexto del constructor
     private Object3D loadModel(Context context, float scale) {
         is = context.getResources().openRawResource(nave_obj);

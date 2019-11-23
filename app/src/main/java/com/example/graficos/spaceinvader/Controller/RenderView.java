@@ -43,11 +43,12 @@ import static com.example.graficos.spaceinvader.R.raw.f_obj;
 import static com.example.graficos.spaceinvader.R.raw.nave_obj;
 
 
-public class RenderView extends Activity implements GLSurfaceView.Renderer, SensorEventListener {
+public class RenderView extends Activity implements GLSurfaceView.Renderer {
     private MainActivity main;
     private World world= null;;
     private FrameBuffer fb;
-    private float thingScale = 0.0010f;//end
+    //escala de la nave
+    private float thingScale = 0.0020f;//end
     private static RenderView master = null;
     private RGBColor back = new RGBColor(50, 50, 100);
     private long time = System.currentTimeMillis();
@@ -67,8 +68,6 @@ public class RenderView extends Activity implements GLSurfaceView.Renderer, Sens
     AssetManager assMan;
     InputStream is,mtl;
     //constructor
-    private SensorManager miMananger;
-    private Sensor miAcelorometro;
     private Context context;
     public   RenderView(Context context){
         this.context=context;
@@ -78,18 +77,17 @@ public class RenderView extends Activity implements GLSurfaceView.Renderer, Sens
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        miMananger=(SensorManager)getSystemService(SENSOR_SERVICE);
-        miAcelorometro=   miMananger.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
     }
     @Override
     protected  void onResume(){
         super.onResume();
-        miMananger.registerListener(this,miAcelorometro,SensorManager.SENSOR_DELAY_GAME);
+
     }
     @Override
     protected void onPause(){
         super.onPause();
-        miMananger.unregisterListener(this);
+
     }
 
     @Override
@@ -106,9 +104,6 @@ public class RenderView extends Activity implements GLSurfaceView.Renderer, Sens
         }
         fb = new FrameBuffer(gl, width, height);
 
-
-
-
         if (master == null) {
 
             world = new World();
@@ -121,12 +116,13 @@ public class RenderView extends Activity implements GLSurfaceView.Renderer, Sens
             thing = loadModel("raw/nave_obj.obj", thingScale);
 
             thing.build();
+            //cargamos la textura del mtl
             Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(context.getResources().getDrawable(R.drawable.nave_bomber_body_diffuse)), 64, 64));
             TextureManager.getInstance().addTexture("texture", texture);
             thing.calcTextureWrap();
             thing.setTexture("texture");
             thing.strip();
-
+            ///
 
             world.addObject(thing);
             cam = world.getCamera();
@@ -152,7 +148,6 @@ public class RenderView extends Activity implements GLSurfaceView.Renderer, Sens
                 master = RenderView.this;
             }
         }
-        mover_nave(movete);
 
     }
 
@@ -187,9 +182,11 @@ public class RenderView extends Activity implements GLSurfaceView.Renderer, Sens
         npotTexture.applyEffect ();
 
 */
+//hace un moviento constante de la nave
      mover_nave(movete);
+     ///
         fb.clear();
-        //fb.blit (npotTexture, 0, 0, 0, 0,bitmap.getWidth (), bitmap.getHeight (),FrameBuffer.OPAQUE_BLITTING);
+
         world.renderScene(fb);
         world.draw(fb);
         fb.display();
@@ -228,41 +225,30 @@ public class RenderView extends Activity implements GLSurfaceView.Renderer, Sens
         dest.setRow(3, 0f, 0f, 0f, 1f);
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-       // String s=String.valueOf(event);
-       // toastMsg(s);
 
-        float[] result = new float[9];
-       /* SensorManager.remapCoordinateSystem(
-                rotationMatrix, SensorManager.AXIS_MINUS_Y,
-                SensorManager.AXIS_MINUS_X, result);*/
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
     public float movete=0;
     public void mover_nave(float valor){
- float  cant=0.005f;
+    float  cant=0.005f;
         if (valor<0 && valor>-50){
             //thing.translate(movete+cant,0.0f,0);
-            thing.translate(0.05f,0.0f,0);
-            //thing.rotateZ(0.55f);
+            //thing.translate(0.05f,0.0f,0);
+            thing.translate(-0.05f,0.0f,0.0f);
+            thing.rotateZ(0.015f);
             //thing.translate(0.05f,0.0f,0.55f); los objetos se alejan de z hacia x
         }
         if(valor>0 && valor<40)
         {
            // thing.translate(movete-cant,0.0f,0);
-            thing.translate(-0.05f,0.0f,0);
-            //thing.rotateZ(-0.55f);
+            thing.translate(0.05f,0.0f,0.0f);
+            //thing.translate(-0.05f,0.0f,0);
+            thing.rotateZ(-0.015f);
             //thing.translate(-0.05f,0.0f,-0.55f); los objetos vienen de z hacia x
         }
     }
 
 float constante=0.05f;
     public void mover_derecha() {
+
         thing.translate(movete+constante,0.0f,0);
     }
 
