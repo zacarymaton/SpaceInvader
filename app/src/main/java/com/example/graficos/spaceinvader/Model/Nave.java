@@ -3,6 +3,7 @@ package com.example.graficos.spaceinvader.Model;
 
 import android.graphics.drawable.Drawable;
 
+import com.example.graficos.spaceinvader.R;
 import com.threed.jpct.Loader;
 
 import com.threed.jpct.Object3D;
@@ -54,7 +55,8 @@ public class Nave {
             naveTemp.setCenter(SimpleVector.ORIGIN);
 
             this.nave = Object3D.mergeObjects(this.nave, naveTemp);
-          //  this.nave.setTexture("texture");
+
+           this.nave.setTexture("texture");
             this.nave.build();
         }
 
@@ -66,38 +68,5 @@ public class Nave {
 
         this.nave.translate(posX, posY, posZ);
     }
-
-    public SimpleVector getTransformedCenter() {
-        return this.nave.getTransformedCenter();
-    }
-
-    public void moverIzq(float valor) {
-        posX = posX - valor;
-        this.nave.translate(posX,posY,posZ);
-    }
-
-    public void moverDer(float valor) {
-        posX += valor;
-        this.nave.translate(posX,posY,posZ);
-
-    }
-
-    public void moverArriba(float valor) {
-
-    }
-
-    public void moverAbajo(float valor) {
-
-    }
-
-    public void traslate() {
-        this.nave.translate(posX,posY,posZ);
-    }
-
-
-
-
-
-
 
 }

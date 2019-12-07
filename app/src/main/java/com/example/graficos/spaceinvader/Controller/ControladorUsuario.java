@@ -13,9 +13,6 @@ import androidx.annotation.NonNull;
 
 public class ControladorUsuario {
     private Nave nave;
-    public  ControladorUsuario(){
-        nave=new Nave();
-    }
 
     public ControladorUsuario(Context context){
         nave=new Nave();

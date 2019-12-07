@@ -1,23 +1,12 @@
 package com.example.graficos.spaceinvader.Controller;
 
-import android.annotation.SuppressLint;
+
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.hardware.SensorManager;
+
 import android.opengl.GLSurfaceView;
 
-import com.threed.jpct.Camera;
 
-
-import com.threed.jpct.Light;
-
-import com.threed.jpct.Object3D;
-import com.threed.jpct.RGBColor;
-
-
-
-import java.io.InputStream;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -50,17 +39,10 @@ public class RenderView  implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl10) {
-
-
         escenario.limpiarFrameBuffer();
-
         escenario.renderScene();
-
         escenario.draw();
-
         escenario.displayFrameBuffer();
-
-
     }
 
 }
