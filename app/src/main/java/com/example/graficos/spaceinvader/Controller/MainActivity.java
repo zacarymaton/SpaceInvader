@@ -28,9 +28,9 @@ private OpengGLView opengGLView;
         //hechamos la pantalla
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //instancio el SurfaceView en la Interfaz
-        opengGLView=(OpengGLView)findViewById(R.id.openGLView);
-        opengGLView.setBackgroundResource(R.drawable.invacionbackground);
-       opengGLView.setZOrderOnTop(true);
+        opengGLView=findViewById(R.id.openGLView);
+      //  opengGLView.setBackgroundResource(R.drawable.invacionbackground);
+     //  opengGLView.setZOrderOnTop(true);
       //sensor de acelerometro
         miMananger=(SensorManager)getSystemService(SENSOR_SERVICE);
         miAcelorometro=   miMananger.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -51,36 +51,46 @@ private OpengGLView opengGLView;
         opengGLView.onPause();
         miMananger.unregisterListener(this);
     }
-    @Override
-    protected void onStop(){
-        super.onStop();
-        opengGLView.onResume();
-    }
+   
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        String x=String.valueOf(event.values[1]);
+        String x=String.valueOf(event.values[0]);
         String y=String.valueOf(event.values[1]);
         String z=String.valueOf(event.values[2]);
 
 
-       // toastMsg(x);
-      //  txt.setText(x);
-
         Float datox=Float.parseFloat(x);
         Float datoy=Float.parseFloat(y);
         Float datoz=Float.parseFloat(z);
+        /*
 
+        switch (datox) {
+            case datox>0:
+                opengGLView.escenario.moverDerecha();
+                break;
+            case datox<0:
+                opengGLView.escenario.moverDerecha();
+                break;
+            case datox<datoy:
+              opengGLView.escenario.moverArriba();
+                break;
+            case datox>datoy:
+                opengGLView.escenario.moverAbajo();
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + datox);
+        }*/
 
-       /* if(datox>0) {
+      /*  if(datox>0) {
 
-                 opengGLView.escenario.mover_derecha();
+           opengGLView.escenario.moverDerecha();
         }else {
-           opengGLView.escenario.mover_izquierda();
+           opengGLView.escenario.moverDerecha();
            }
-        */
 
-     opengGLView.escenario.movete=datox*0.0095f;
+*/
+
 
     }
     public void toastMsg(String msg) {

@@ -17,10 +17,10 @@ public class OpengGLView extends GLSurfaceView {
 
 
     public RenderView escenario;;
-    private OpengGLView view;
+
     public OpengGLView(Context context) {
         super(context);
-        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+     //   setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         init(context);
     }
 
@@ -30,8 +30,6 @@ public class OpengGLView extends GLSurfaceView {
     }
     private void  init(Context context){
         escenario=new RenderView(context);
-        setEGLContextClientVersion(1);
-        setPreserveEGLContextOnPause(true);
         setRenderer(escenario);
     }
 

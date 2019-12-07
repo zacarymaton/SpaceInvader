@@ -1,67 +1,103 @@
 package com.example.graficos.spaceinvader.Model;
 
-import android.content.Context;
 
-import com.example.graficos.spaceinvader.R;
+import android.graphics.drawable.Drawable;
+
 import com.threed.jpct.Loader;
-import com.threed.jpct.Matrix;
+
 import com.threed.jpct.Object3D;
 import com.threed.jpct.SimpleVector;
+import com.threed.jpct.Texture;
+import com.threed.jpct.TextureManager;
+
+import com.threed.jpct.util.BitmapHelper;
 
 import java.io.InputStream;
 
-import static com.example.graficos.spaceinvader.R.raw.nave_obj;
+
 
 public class Nave {
-private int vidas=3;
-int count;
-    InputStream is,mtl;
-private boolean moviendo;
-private Object3D nave;
-    float constante = 0.005f;
-    public Nave(int vidas, int count, boolean moviendo) {
-        this.vidas = vidas;
-        this.count = count;
-        this.moviendo = moviendo;
+    private Object3D nave;
+
+
+    private float posX;
+    private float posY;
+    private float posZ;
+    private int vidas=7;
+
+
+    public Nave(){
+        posX=0.0f;
+        posY=0.0f;
+        posZ=0.0f;
+    }
+    public Object3D getNave() {
+        return nave;
     }
 
-    public Nave() {
-
+    public void setNave(Object3D nave) {
+        this.nave = nave;
     }
-    public void moverIzquierda(Object3D object3D){
-
-        nave.translate(constante,0,0);
-
+    public void adicionarTextura(Drawable drawable){
+        Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(drawable), 1024, 1024));
+        TextureManager.getInstance().addTexture("texture", texture);
     }
-    public void moverDerecha(Object3D object3D){
-
-        nave.translate(constante,0,0);
-    }
-    public void moverArriba(Object3D object3D){
-
-        nave.translate(0,constante,0);
-    }
-
 
 
     //leemos el modelo del contexto del constructor
-    private Object3D loadModel(Context context, float scale) {
-        is = context.getResources().openRawResource(nave_obj);
-        mtl=context.getResources().openRawResource(R.raw.nave_mtl);
-
-        Object3D[] model = Loader.loadOBJ(is, mtl, scale);
-        Object3D o3d = new Object3D(0);
-        Object3D temp = null;
+    public void leerModelo(InputStream inputStreamstream,float escala){
+        Object3D[] model = Loader.loadOBJ(inputStreamstream, null, escala);
+        this.nave = new Object3D(0);
+        Object3D naveTemp=null;
         for (int i = 0; i < model.length; i++) {
-            temp = model[i];
-            temp.setCenter(SimpleVector.ORIGIN.ORIGIN);
-            temp.rotateX((float)( -.5*Math.PI));
-            temp.rotateMesh();
-            temp.setRotationMatrix(new Matrix());
-            o3d = Object3D.mergeObjects(o3d, temp);
-            o3d.build();
+            naveTemp = model[i];
+            naveTemp.setCenter(SimpleVector.ORIGIN);
+
+            this.nave = Object3D.mergeObjects(this.nave, naveTemp);
+          //  this.nave.setTexture("texture");
+            this.nave.build();
         }
-        return o3d;
+
+        this.nave.setName("usuario");
+
+       // this.nave.rotateX((float)( -1.0*Math.PI));
+        nave.rotateX(3.0f);
+        nave.rotateZ(3.15f);
+
+        this.nave.translate(posX, posY, posZ);
     }
+
+    public SimpleVector getTransformedCenter() {
+        return this.nave.getTransformedCenter();
+    }
+
+    public void moverIzq(float valor) {
+        posX = posX - valor;
+        this.nave.translate(posX,posY,posZ);
+    }
+
+    public void moverDer(float valor) {
+        posX += valor;
+        this.nave.translate(posX,posY,posZ);
+
+    }
+
+    public void moverArriba(float valor) {
+
+    }
+
+    public void moverAbajo(float valor) {
+
+    }
+
+    public void traslate() {
+        this.nave.translate(posX,posY,posZ);
+    }
+
+
+
+
+
+
 
 }
